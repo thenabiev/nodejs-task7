@@ -1,12 +1,33 @@
 const express=require('express');
+const ejs=require('ejs');
+const path=require('path');
 
 const app=express();
 
+// Template engine
+app.set('view engine', 'ejs');
+
+// Middleware
+app.use(express.static('public'));
+
 app.get('/', (req, res)=>{
 
-    const blog = { id: 1, title: "Blog title", description: "Blog description" }
+    res.render('index')
+});
 
-    res.send(`<h1>${blog.title}</h1> <br/> <p>${blog.description}</p>`)
+app.get('/about', (req, res)=>{
+
+    res.render('about')
+});
+
+app.get('/add', (req, res)=>{
+
+    res.render('add')
+});
+
+app.get('/post', (req, res)=>{
+
+    res.render('post')
 });
 
 
