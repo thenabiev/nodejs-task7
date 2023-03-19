@@ -4,16 +4,41 @@ const path=require('path');
 
 const app=express();
 
+const mongoose=require('mongoose');
+const Post = require('./models/Post')
+
+// Connect DB
+mongoose.connect('mongodb://localhost/cleanblog-test-db')
+
+
 // Template engine
 app.set('view engine', 'ejs');
 
 // Middleware
 app.use(express.static('public'));
 
-app.get('/', (req, res)=>{
+app.use(express.urlencoded({extended:true}));
+app.use(express.json());
 
-    res.render('index')
+
+
+
+// Routes
+
+app.get('/', async (req, res)=>{
+    const posts=await Post.find({})
+
+    console.log(posts);
+
+    res.render('index',{
+        posts
+    })
 });
+app.post('/', async(req, res)=>{
+    await Post.create(req.body);
+    console.log(req.body);
+    res.redirect('/')
+})
 
 app.get('/about', (req, res)=>{
 
@@ -21,7 +46,7 @@ app.get('/about', (req, res)=>{
 });
 
 app.get('/add', (req, res)=>{
-
+    
     res.render('add')
 });
 
